@@ -119,7 +119,7 @@ std::vector<int> BinaryParser::parseIntArray( const std::vector<Token>& tokens,
     int              length = Token::binaryTokenSizeInBytes( Token::Kind::INT );
     auto             start  = tokens[startIndex].start();
     stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>(arrayLength) * length );
+    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
     return values;
 }
 
@@ -136,7 +136,7 @@ std::vector<char> BinaryParser::parseByteArray( const std::vector<Token>& tokens
     int               length = Token::binaryTokenSizeInBytes( Token::Kind::BYTE );
     auto              start  = tokens[startIndex].start();
     stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>(arrayLength) * length );
+    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
     return values;
 }
 
@@ -153,7 +153,7 @@ std::vector<float> BinaryParser::parseFloatArray( const std::vector<Token>& toke
     int                length = Token::binaryTokenSizeInBytes( Token::Kind::FLOAT );
     auto               start  = tokens[startIndex].start();
     stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>(arrayLength) * length );
+    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
     return values;
 }
 
@@ -170,7 +170,7 @@ std::vector<double> BinaryParser::parseDoubleArray( const std::vector<Token>& to
     int                 length = Token::binaryTokenSizeInBytes( Token::Kind::DOUBLE );
     auto                start  = tokens[startIndex].start();
     stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>(arrayLength) * length );
+    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
 
     return values;
 }
