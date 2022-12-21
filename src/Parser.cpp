@@ -33,6 +33,7 @@ void Parser::parse( std::istream&                                     stream,
 {
     auto        it           = tokens.begin();
     std::string tagGroupName = "";
+    std::string lastName     = "";
     while ( it != tokens.end() )
     {
         if ( it->kind() == Token::Kind::TAG )
@@ -43,7 +44,13 @@ void Parser::parse( std::istream&                                     stream,
         }
         else if ( isSimpleType( it->kind() ) )
         {
-            scalarValues.push_back( parseSimpleType( it, tagGroupName, stream ) );
+            auto simpleType = parseSimpleType( it, tagGroupName, stream );
+            if ( simpleType.first == "parameter.name" )
+            {
+                lastName = std::get<std::string>( simpleType.second );
+            }
+
+            scalarValues.push_back( simpleType );
         }
         else if ( it->kind() == Token::Kind::ARRAY )
         {
@@ -55,6 +62,12 @@ void Parser::parse( std::istream&                                     stream,
             // Extract the name
             std::advance( it, 1 );
             std::string name = tagGroupName + "." + parseString( *it, stream );
+
+            if ( name == "parameter.data" )
+            {
+                name     = lastName;
+                lastName = "";
+            }
 
             // Extract number of array items
             std::advance( it, 1 );

@@ -92,6 +92,18 @@ std::vector<std::pair<std::string, Token::Kind>> Reader::getNamedArrayTypes() co
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
+size_t Reader::getArrayLength( const std::string& keyword ) const
+{
+    auto it = m_arrayInfo.find( keyword );
+    if ( it != m_arrayInfo.end() )
+        return it->second.second;
+    else
+        return 0;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
 std::vector<std::string> Reader::getStringArray( const std::string& keyword )
 {
     auto [startIndex, arrayLength] = m_arrayInfo[keyword];
