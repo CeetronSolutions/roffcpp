@@ -26,5 +26,6 @@ public:
     std::optional<Token> tokenizeWord( std::istream& stream, const std::string& keywork, Token::Kind kind ) override;
 
 protected:
-    std::vector<Token> tokenizeTagKeyInternal( std::istream& stream ) override;
+    std::vector<Token>   tokenizeTagKeyInternal( std::istream& stream ) override;
+    std::optional<Token> tokenizeStringInternal( std::istream& stream, bool skipDelimiter );
 };
