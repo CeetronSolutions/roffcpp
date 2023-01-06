@@ -44,7 +44,15 @@ bool BinaryTokenizer::tokenizeSpace( std::istream& stream )
 //--------------------------------------------------------------------------------------------------
 std::optional<Token> BinaryTokenizer::tokenizeString( std::istream& stream )
 {
-    tokenizeDelimiter( stream );
+    return tokenizeStringInternal( stream, true );
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+std::optional<Token> BinaryTokenizer::tokenizeStringInternal( std::istream& stream, bool skipDelimiter )
+{
+    if ( skipDelimiter ) tokenizeDelimiter( stream );
 
     auto start    = stream.tellg();
     auto end      = start;
@@ -184,7 +192,6 @@ std::vector<Token> BinaryTokenizer::tokenizeArrayTagKey( std::istream& stream )
 
     std::vector<Token> arrayTokens = tokenizeArrayData( stream, numElements, typeToken.kind() );
     tokens.insert( tokens.end(), arrayTokens.begin(), arrayTokens.end() );
-
     return tokens;
 }
 
@@ -195,8 +202,15 @@ std::vector<Token> BinaryTokenizer::tokenizeArrayData( std::istream& stream, siz
 {
     if ( kind == Token::Kind::CHAR )
     {
-        assert( false && "Not implemented" );
         std::vector<Token> tokens;
+        for ( size_t i = 0; i < numElements; i++ )
+        {
+            auto stringToken = tokenizeStringInternal( stream, false );
+            if ( stringToken )
+            {
+                tokens.push_back( stringToken.value() );
+            }
+        }
         return tokens;
     }
     else

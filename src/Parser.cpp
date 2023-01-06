@@ -63,10 +63,21 @@ void Parser::parse( std::istream&                                     stream,
             std::advance( it, 1 );
             std::string name = tagGroupName + "." + parseString( *it, stream );
 
+            // Special handling for parameter tags.
+            // Take the name of parameter as name of the group to avoid
+            // name-clashes (multiple properties named parameter.data/codeNames/codeValues).
             if ( name == "parameter.data" )
             {
                 name     = lastName;
                 lastName = "";
+            }
+            else if ( name == "parameter.codeNames" )
+            {
+                name = lastName + ".codeNames";
+            }
+            else if ( name == "parameter.codeValues" )
+            {
+                name = lastName + ".codeValues";
             }
 
             // Extract number of array items
