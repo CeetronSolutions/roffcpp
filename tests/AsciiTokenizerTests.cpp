@@ -302,7 +302,7 @@ TEST( AsciiTokenizerTests, testTokenizeExampleFile )
 
     auto readValueForToken = []( std::istream& stream, const Token& token ) {
         stream.seekg( token.start() );
-        int         length = token.end() - token.start();
+        size_t      length = token.end() - token.start();
         std::string res;
         res.resize( length );
         stream.read( const_cast<char*>( res.data() ), length );
