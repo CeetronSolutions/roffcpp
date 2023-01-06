@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------------------------
 TEST( ReaderTests, testParseScalarNamedValuesFromExampleFile )
 {
-    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roff" );
+    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roff", std::ios::binary );
     ASSERT_TRUE( stream.good() );
 
     Reader reader( stream );
@@ -71,7 +71,7 @@ TEST( ReaderTests, testParseScalarNamedValuesFromExampleFile )
 //--------------------------------------------------------------------------------------------------
 TEST( ReaderTests, testParseArrayValuesFromExampleFile )
 {
-    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roff" );
+    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roff", std::ios::binary );
     ASSERT_TRUE( stream.good() );
 
     Reader reader( stream );
@@ -116,7 +116,7 @@ TEST( ReaderTests, testParseArrayValuesFromExampleFile )
 //--------------------------------------------------------------------------------------------------
 TEST( ReaderTests, testParseScalarNamedValuesFromBinaryExampleFile )
 {
-    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roffbin" );
+    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roffbin", std::ios::binary );
     ASSERT_TRUE( stream.good() );
 
     Reader reader( stream );
@@ -170,7 +170,7 @@ TEST( ReaderTests, testParseScalarNamedValuesFromBinaryExampleFile )
 //--------------------------------------------------------------------------------------------------
 TEST( ReaderTests, testParseArrayValuesFromBinaryExampleFile )
 {
-    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roffbin" );
+    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/facies_info.roffbin", std::ios::binary );
     ASSERT_TRUE( stream.good() );
 
     Reader reader( stream );
@@ -213,7 +213,7 @@ TEST( ReaderTests, testParseGridFiles )
 
     for ( auto fileName : fileNames )
     {
-        std::ifstream stream( std::string( TEST_DATA_DIR ) + "/" + fileName );
+        std::ifstream stream( std::string( TEST_DATA_DIR ) + "/" + fileName, std::ios::binary );
         ASSERT_TRUE( stream.good() );
 
         Reader reader( stream );
