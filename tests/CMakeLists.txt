@@ -27,6 +27,13 @@ CONFIGURE_FILE( ${CMAKE_CURRENT_LIST_DIR}/RoffTestDataDirectory.hpp.cmake
 
 target_include_directories(roffcpp-tests PUBLIC ../src/ ${CMAKE_BINARY_DIR}/Generated)
 
+if(MSVC)
+  target_compile_options(roffcpp-tests PRIVATE /W4 /WX)
+else()
+  target_compile_options(roffcpp-tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+
 target_compile_features(roffcpp-tests PRIVATE cxx_std_17)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
