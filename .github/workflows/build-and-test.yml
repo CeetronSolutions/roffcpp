@@ -13,34 +13,64 @@ jobs:
       matrix:
         config:
           - {
-            name: "Windows 2022 MSVC",
+            name: "Windows 2022 MSVC Release",
             os: windows-2022,
             build_type: "Release", cc: "cl", cxx: "cl",
           }
           - {
-            name: "Ubuntu 20.04 GCC",
+            name: "Ubuntu 20.04 GCC Release",
             os: ubuntu-20.04,
             build_type: "Release", cc: "gcc", cxx: "g++"
           }
           - {
-            name: "Ubuntu 20.04 Clang",
+            name: "Ubuntu 20.04 Clang Release",
             os: ubuntu-20.04,
             build_type: "Release", cc: "clang", cxx: "clang++"
           }
           - {
-            name: "Ubuntu 22.04 GCC",
+            name: "Ubuntu 22.04 GCC Release",
             os: ubuntu-22.04,
             build_type: "Release", cc: "gcc", cxx: "g++"
           }
           - {
-            name: "Ubuntu 22.04 Clang",
+            name: "Ubuntu 22.04 Clang Release",
             os: ubuntu-22.04,
             build_type: "Release", cc: "clang", cxx: "clang++"
           }
           - {
-            name: "macOS 12 Clang",
+            name: "macOS 12 Clang Release",
             os: macos-12,
             build_type: "Release", cc: "clang", cxx: "clang++"
+          }
+          - {
+            name: "Windows 2022 MSVC Debug",
+            os: windows-2022,
+            build_type: "Debug", cc: "cl", cxx: "cl",
+          }
+          - {
+            name: "Ubuntu 20.04 GCC Debug",
+            os: ubuntu-20.04,
+            build_type: "Debug", cc: "gcc", cxx: "g++"
+          }
+          - {
+            name: "Ubuntu 20.04 Clang Debug",
+            os: ubuntu-20.04,
+            build_type: "Debug", cc: "clang", cxx: "clang++"
+          }
+          - {
+            name: "Ubuntu 22.04 GCC Debug",
+            os: ubuntu-22.04,
+            build_type: "Debug", cc: "gcc", cxx: "g++"
+          }
+          - {
+            name: "Ubuntu 22.04 Clang Debug",
+            os: ubuntu-22.04,
+            build_type: "Debug", cc: "clang", cxx: "clang++"
+          }
+          - {
+            name: "macOS 12 Clang Debug",
+            os: macos-12,
+            build_type: "Debug", cc: "clang", cxx: "clang++"
           }
     steps:
     - uses: actions/checkout@v3
