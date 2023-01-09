@@ -26,24 +26,31 @@ Reader::Reader( std::istream& stream )
 //--------------------------------------------------------------------------------------------------
 void Reader::parse()
 {
-    // Detect file type from first token
-    BinaryTokenizer tokenizer;
+    bool isBinary = detectFileTypeFromFirstToken( *m_stream );
+    if ( isBinary )
+    {
+        parseBinary();
+    }
+    else
+    {
+        parseAscii();
+    }
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+bool Reader::detectFileTypeFromFirstToken( std::istream& stream )
+{
     try
     {
-        Token token = tokenizer.tokenizeFileType( *m_stream );
+        // Detect file type from first token
+        BinaryTokenizer tokenizer;
+        Token           token = tokenizer.tokenizeFileType( stream );
         assert( token.kind() == Token::Kind::ROFF_ASC || token.kind() == Token::Kind::ROFF_BIN );
-
-        m_stream->clear();
-        m_stream->seekg( 0 );
-
-        if ( token.kind() == Token::Kind::ROFF_ASC )
-        {
-            parseAscii();
-        }
-        else
-        {
-            parseBinary();
-        }
+        stream.clear();
+        stream.seekg( 0 );
+        return token.kind() == Token::Kind::ROFF_BIN;
     }
     catch ( std::runtime_error& )
     {

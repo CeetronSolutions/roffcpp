@@ -250,3 +250,15 @@ TEST( ReaderTests, testParseGridFiles )
         ASSERT_EQ( "", codeNames[1] );
     }
 }
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+TEST( ReaderTests, testParseUnsupportedEndianness )
+{
+    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/unsupported_endianness.roff", std::ios::binary );
+    ASSERT_TRUE( stream.good() );
+
+    Reader reader( stream );
+    ASSERT_THROW( reader.parse(), std::runtime_error );
+}
