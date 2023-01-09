@@ -29,6 +29,7 @@ public:
 private:
     void parseAscii();
     void parseBinary();
+    bool detectFileTypeFromFirstToken( std::istream& stream );
 
     std::vector<Token>                               m_tokens;
     std::istream*                                    m_stream;

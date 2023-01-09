@@ -50,6 +50,12 @@ void Parser::parse( std::istream&                                     stream,
                 lastName = std::get<std::string>( simpleType.second );
             }
 
+            // Only little-endian is supported.
+            if ( simpleType.first == "filedata.byteswaptest" && std::get<int>( simpleType.second ) != 1 )
+            {
+                throw std::runtime_error( "Unexpected endianness." );
+            }
+
             scalarValues.push_back( simpleType );
         }
         else if ( it->kind() == Token::Kind::ARRAY )
