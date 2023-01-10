@@ -25,6 +25,8 @@
 #include <optional>
 #include <vector>
 
+namespace roff
+{
 class BinaryTokenizer : public Tokenizer
 {
 public:
@@ -47,3 +49,4 @@ protected:
     std::vector<Token>   tokenizeTagKeyInternal( std::istream& stream ) override;
     std::optional<Token> tokenizeStringInternal( std::istream& stream, bool skipDelimiter );
 };
+} // namespace roff

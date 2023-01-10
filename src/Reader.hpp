@@ -27,6 +27,8 @@
 #include <memory>
 #include <vector>
 
+namespace roff
+{
 class Reader
 {
 public:
@@ -56,3 +58,4 @@ private:
     std::map<std::string, std::pair<long, long>>     m_arrayInfo;
     std::unique_ptr<Parser>                          m_parser;
 };
+} // namespace roff

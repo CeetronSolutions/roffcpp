@@ -20,6 +20,8 @@
 
 #include <string>
 
+namespace roff
+{
 class Token
 {
 public:
@@ -57,3 +59,4 @@ private:
     size_t m_start;
     size_t m_end;
 };
+} // namespace roff

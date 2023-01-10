@@ -28,6 +28,8 @@
 #include <variant>
 #include <vector>
 
+namespace roff
+{
 class AsciiParser : public Parser
 {
 public:
@@ -77,3 +79,4 @@ public:
     bool          parseBool( const Token& token, std::istream& stream ) const override;
     unsigned char parseByte( const Token& token, std::istream& stream ) const override;
 };
+} // namespace roff
