@@ -27,6 +27,8 @@
 #include <variant>
 #include <vector>
 
+namespace roff
+{
 class Parser
 {
 public:
@@ -75,3 +77,4 @@ public:
 
     static bool isSimpleType( Token::Kind kind );
 };
+} // namespace roff

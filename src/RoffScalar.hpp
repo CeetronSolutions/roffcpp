@@ -21,4 +21,7 @@
 #include <string>
 #include <variant>
 
+namespace roff
+{
 typedef std::variant<int, float, double, unsigned char, bool, std::string> RoffScalar;
+}

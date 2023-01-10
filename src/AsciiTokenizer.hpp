@@ -25,6 +25,8 @@
 #include <optional>
 #include <vector>
 
+namespace roff
+{
 class AsciiTokenizer : public Tokenizer
 {
 public:
@@ -45,3 +47,4 @@ public:
 protected:
     std::vector<Token> tokenizeTagKeyInternal( std::istream& stream ) override;
 };
+} // namespace roff
