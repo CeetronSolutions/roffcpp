@@ -38,12 +38,11 @@ public:
     std::optional<Token> tokenizeString( std::istream& stream ) override;
     Token                tokenizeName( std::istream& stream ) override;
     std::vector<Token>   tokenizeArrayTagKey( std::istream& stream ) override;
+    std::optional<Token> tokenizeWord( std::istream& stream, const std::string& keywork, Token::Kind kind ) override;
 
-    std::vector<Token>   tokenizeArrayData( std::istream& stream, size_t numElements, Token::Kind kind );
     std::optional<Token> tokenizeNumber( std::istream& stream, Token::Kind kind );
     std::optional<Token> tokenizeValue( std::istream& stream, Token::Kind kind );
-
-    std::optional<Token> tokenizeWord( std::istream& stream, const std::string& keywork, Token::Kind kind ) override;
+    std::vector<Token>   tokenizeArrayData( std::istream& stream, size_t numElements, Token::Kind kind );
 
 protected:
     std::vector<Token>   tokenizeTagKeyInternal( std::istream& stream ) override;
