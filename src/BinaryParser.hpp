@@ -78,5 +78,30 @@ public:
     float         parseFloat( const Token& token, std::istream& stream ) const override;
     bool          parseBool( const Token& token, std::istream& stream ) const override;
     unsigned char parseByte( const Token& token, std::istream& stream ) const override;
+
+private:
+    template <typename T, Token::Kind K>
+    T parseScalar( const Token& token, std::istream& stream ) const
+    {
+        stream.clear();
+        int  length = Token::binaryTokenSizeInBytes( K );
+        auto start  = token.start();
+        T    value;
+        stream.seekg( start );
+        stream.read( reinterpret_cast<char*>( &value ), length );
+        return value;
+    }
+
+    template <typename T, Token::Kind K>
+    std::vector<T> parseArray( const std::vector<Token>& tokens, std::istream& stream, long startIndex, long arrayLength ) const
+    {
+        stream.clear();
+        std::vector<T> values( arrayLength );
+        int            length = Token::binaryTokenSizeInBytes( K );
+        auto           start  = tokens[startIndex].start();
+        stream.seekg( start );
+        stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
+        return values;
+    }
 };
 } // namespace roff
