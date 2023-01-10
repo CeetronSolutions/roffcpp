@@ -55,13 +55,7 @@ std::string BinaryParser::parseString( const Token& token, std::istream& stream 
 //--------------------------------------------------------------------------------------------------
 int BinaryParser::parseInt( const Token& token, std::istream& stream ) const
 {
-    stream.clear();
-    int  length = Token::binaryTokenSizeInBytes( Token::Kind::INT );
-    auto start  = token.start();
-    int  myint;
-    stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( &myint ), length );
-    return myint;
+    return parseScalar<int, Token::Kind::INT>( token, stream );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -69,13 +63,7 @@ int BinaryParser::parseInt( const Token& token, std::istream& stream ) const
 //--------------------------------------------------------------------------------------------------
 double BinaryParser::parseDouble( const Token& token, std::istream& stream ) const
 {
-    stream.clear();
-    int    length = Token::binaryTokenSizeInBytes( Token::Kind::DOUBLE );
-    auto   start  = token.start();
-    double value;
-    stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( &value ), length );
-    return value;
+    return parseScalar<double, Token::Kind::DOUBLE>( token, stream );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -83,13 +71,7 @@ double BinaryParser::parseDouble( const Token& token, std::istream& stream ) con
 //--------------------------------------------------------------------------------------------------
 float BinaryParser::parseFloat( const Token& token, std::istream& stream ) const
 {
-    stream.clear();
-    int   length = Token::binaryTokenSizeInBytes( Token::Kind::FLOAT );
-    auto  start  = token.start();
-    float value;
-    stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( &value ), length );
-    return value;
+    return parseScalar<float, Token::Kind::FLOAT>( token, stream );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -134,13 +116,7 @@ std::vector<int> BinaryParser::parseIntArray( const std::vector<Token>& tokens,
                                               long                      startIndex,
                                               long                      arrayLength ) const
 {
-    stream.clear();
-    std::vector<int> values( arrayLength );
-    int              length = Token::binaryTokenSizeInBytes( Token::Kind::INT );
-    auto             start  = tokens[startIndex].start();
-    stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
-    return values;
+    return parseArray<int, Token::Kind::INT>( tokens, stream, startIndex, arrayLength );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -151,13 +127,7 @@ std::vector<char> BinaryParser::parseByteArray( const std::vector<Token>& tokens
                                                 long                      startIndex,
                                                 long                      arrayLength ) const
 {
-    stream.clear();
-    std::vector<char> values( arrayLength );
-    int               length = Token::binaryTokenSizeInBytes( Token::Kind::BYTE );
-    auto              start  = tokens[startIndex].start();
-    stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
-    return values;
+    return parseArray<char, Token::Kind::BYTE>( tokens, stream, startIndex, arrayLength );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -168,13 +138,7 @@ std::vector<float> BinaryParser::parseFloatArray( const std::vector<Token>& toke
                                                   long                      startIndex,
                                                   long                      arrayLength ) const
 {
-    stream.clear();
-    std::vector<float> values( arrayLength );
-    int                length = Token::binaryTokenSizeInBytes( Token::Kind::FLOAT );
-    auto               start  = tokens[startIndex].start();
-    stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
-    return values;
+    return parseArray<float, Token::Kind::FLOAT>( tokens, stream, startIndex, arrayLength );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -185,12 +149,5 @@ std::vector<double> BinaryParser::parseDoubleArray( const std::vector<Token>& to
                                                     long                      startIndex,
                                                     long                      arrayLength ) const
 {
-    stream.clear();
-    std::vector<double> values( arrayLength );
-    int                 length = Token::binaryTokenSizeInBytes( Token::Kind::DOUBLE );
-    auto                start  = tokens[startIndex].start();
-    stream.seekg( start );
-    stream.read( reinterpret_cast<char*>( values.data() ), static_cast<std::streamsize>( arrayLength ) * length );
-
-    return values;
+    return parseArray<double, Token::Kind::DOUBLE>( tokens, stream, startIndex, arrayLength );
 }
