@@ -45,13 +45,15 @@ TEST( ReaderTests, testParseScalarNamedValuesFromExampleFile )
     std::vector<std::pair<std::string, RoffScalar>> values = reader.scalarNamedValues();
     ASSERT_FALSE( values.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword ) {
-        return std::any_of( values.cbegin(), values.cend(), [&keyword]( const auto& arg ) {
-            return arg.first == keyword;
-        } );
+    auto hasValue = []( auto values, const std::string& keyword )
+    {
+        return std::any_of( values.cbegin(),
+                            values.cend(),
+                            [&keyword]( const auto& arg ) { return arg.first == keyword; } );
     };
 
-    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword ) {
+    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword )
+    {
         auto a =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         if ( a != values.end() )
@@ -99,7 +101,8 @@ TEST( ReaderTests, testParseArrayValuesFromExampleFile )
     std::vector<std::pair<std::string, Token::Kind>> arrayTypes = reader.getNamedArrayTypes();
     ASSERT_FALSE( arrayTypes.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind ) {
+    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind )
+    {
         auto x =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         return x != values.end() && x->second == kind;
@@ -144,13 +147,15 @@ TEST( ReaderTests, testParseScalarNamedValuesFromBinaryExampleFile )
     std::vector<std::pair<std::string, RoffScalar>> values = reader.scalarNamedValues();
     ASSERT_FALSE( values.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword ) {
-        return std::any_of( values.cbegin(), values.cend(), [&keyword]( const auto& arg ) {
-            return arg.first == keyword;
-        } );
+    auto hasValue = []( auto values, const std::string& keyword )
+    {
+        return std::any_of( values.cbegin(),
+                            values.cend(),
+                            [&keyword]( const auto& arg ) { return arg.first == keyword; } );
     };
 
-    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword ) {
+    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword )
+    {
         auto a =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         if ( a != values.end() )
@@ -198,7 +203,8 @@ TEST( ReaderTests, testParseArrayValuesFromBinaryExampleFile )
     std::vector<std::pair<std::string, Token::Kind>> arrayTypes = reader.getNamedArrayTypes();
     ASSERT_FALSE( arrayTypes.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind ) {
+    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind )
+    {
         auto x =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         return x != values.end() && x->second == kind;
@@ -241,10 +247,11 @@ TEST( ReaderTests, testParseGridFiles )
         std::vector<std::pair<std::string, Token::Kind>> arrayTypes = reader.getNamedArrayTypes();
         ASSERT_FALSE( arrayTypes.empty() );
 
-        auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind ) {
-            auto x = std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) {
-                return arg.first == keyword;
-            } );
+        auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind )
+        {
+            auto x = std::find_if( values.begin(),
+                                   values.end(),
+                                   [&keyword]( const auto& arg ) { return arg.first == keyword; } );
             return x != values.end() && x->second == kind;
         };
 
@@ -280,4 +287,26 @@ TEST( ReaderTests, testParseUnsupportedEndianness )
 
     Reader reader( stream );
     ASSERT_THROW( reader.parse(), std::runtime_error );
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+TEST( ReaderTests, testReadWrongFileType )
+{
+    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/unexpected_filetype.roff", std::ios::binary );
+    ASSERT_TRUE( stream.good() );
+
+    Reader reader( stream );
+
+    std::string errMsg;
+    try
+    {
+        reader.parse();
+    }
+    catch ( std::runtime_error& ex )
+    {
+        errMsg = ex.what();
+    }
+    ASSERT_EQ( errMsg, std::string( "Unexpected file type." ) );
 }
