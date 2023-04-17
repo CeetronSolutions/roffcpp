@@ -281,3 +281,25 @@ TEST( ReaderTests, testParseUnsupportedEndianness )
     Reader reader( stream );
     ASSERT_THROW( reader.parse(), std::runtime_error );
 }
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+TEST( ReaderTests, testReadWrongFileType )
+{
+    std::ifstream stream( std::string( TEST_DATA_DIR ) + "/unexpected_filetype.roff", std::ios::binary );
+    ASSERT_TRUE( stream.good() );
+
+    Reader reader( stream );
+
+    std::string errMsg;
+    try
+    {
+        reader.parse();
+    }
+    catch ( std::runtime_error& ex )
+    {
+        errMsg = ex.what();
+    }
+    ASSERT_EQ( errMsg, std::string( "Unexpected file type." ) );
+}
