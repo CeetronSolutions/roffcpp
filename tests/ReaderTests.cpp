@@ -45,13 +45,15 @@ TEST( ReaderTests, testParseScalarNamedValuesFromExampleFile )
     std::vector<std::pair<std::string, RoffScalar>> values = reader.scalarNamedValues();
     ASSERT_FALSE( values.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword ) {
-        return std::any_of( values.cbegin(), values.cend(), [&keyword]( const auto& arg ) {
-            return arg.first == keyword;
-        } );
+    auto hasValue = []( auto values, const std::string& keyword )
+    {
+        return std::any_of( values.cbegin(),
+                            values.cend(),
+                            [&keyword]( const auto& arg ) { return arg.first == keyword; } );
     };
 
-    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword ) {
+    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword )
+    {
         auto a =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         if ( a != values.end() )
@@ -99,24 +101,25 @@ TEST( ReaderTests, testParseArrayValuesFromExampleFile )
     std::vector<std::pair<std::string, Token::Kind>> arrayTypes = reader.getNamedArrayTypes();
     ASSERT_FALSE( arrayTypes.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind ) {
+    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind )
+    {
         auto x =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         return x != values.end() && x->second == kind;
     };
 
-    ASSERT_TRUE( hasValue( arrayTypes, "composite.codeNames", Token::Kind::CHAR ) );
-    ASSERT_TRUE( hasValue( arrayTypes, "composite.codeValues", Token::Kind::INT ) );
+    ASSERT_TRUE( hasValue( arrayTypes, "composite" + roff::Parser::postFixCodeNames(), Token::Kind::CHAR ) );
+    ASSERT_TRUE( hasValue( arrayTypes, "composite" + roff::Parser::postFixCodeValues(), Token::Kind::INT ) );
     ASSERT_TRUE( hasValue( arrayTypes, "parameter.floatData", Token::Kind::FLOAT ) );
     ASSERT_TRUE( hasValue( arrayTypes, "parameter.doubleData", Token::Kind::DOUBLE ) );
     ASSERT_TRUE( hasValue( arrayTypes, "parameter.intData", Token::Kind::INT ) );
 
-    std::vector<std::string> codeNames = reader.getStringArray( "composite.codeNames" );
+    std::vector<std::string> codeNames = reader.getStringArray( "composite" + roff::Parser::postFixCodeNames() );
     ASSERT_EQ( 6u, codeNames.size() );
     ASSERT_EQ( "code name 1", codeNames[0] );
     ASSERT_EQ( "code name 6", codeNames[5] );
 
-    std::vector<int> codeValues = reader.getIntArray( "composite.codeValues" );
+    std::vector<int> codeValues = reader.getIntArray( "composite" + roff::Parser::postFixCodeValues() );
     ASSERT_EQ( 6u, codeValues.size() );
     for ( int i = 0; i < 6; i++ )
     {
@@ -144,13 +147,15 @@ TEST( ReaderTests, testParseScalarNamedValuesFromBinaryExampleFile )
     std::vector<std::pair<std::string, RoffScalar>> values = reader.scalarNamedValues();
     ASSERT_FALSE( values.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword ) {
-        return std::any_of( values.cbegin(), values.cend(), [&keyword]( const auto& arg ) {
-            return arg.first == keyword;
-        } );
+    auto hasValue = []( auto values, const std::string& keyword )
+    {
+        return std::any_of( values.cbegin(),
+                            values.cend(),
+                            [&keyword]( const auto& arg ) { return arg.first == keyword; } );
     };
 
-    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword ) {
+    auto getValue = []( const std::vector<std::pair<std::string, RoffScalar>>& values, const std::string& keyword )
+    {
         auto a =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         if ( a != values.end() )
@@ -198,18 +203,19 @@ TEST( ReaderTests, testParseArrayValuesFromBinaryExampleFile )
     std::vector<std::pair<std::string, Token::Kind>> arrayTypes = reader.getNamedArrayTypes();
     ASSERT_FALSE( arrayTypes.empty() );
 
-    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind ) {
+    auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind )
+    {
         auto x =
             std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) { return arg.first == keyword; } );
         return x != values.end() && x->second == kind;
     };
 
-    ASSERT_TRUE( hasValue( arrayTypes, "composite.codeValues", Token::Kind::INT ) );
+    ASSERT_TRUE( hasValue( arrayTypes, "composite" + roff::Parser::postFixCodeValues(), Token::Kind::INT ) );
     ASSERT_TRUE( hasValue( arrayTypes, "parameter.floatData", Token::Kind::FLOAT ) );
     ASSERT_TRUE( hasValue( arrayTypes, "parameter.doubleData", Token::Kind::DOUBLE ) );
     ASSERT_TRUE( hasValue( arrayTypes, "parameter.intData", Token::Kind::INT ) );
 
-    std::vector<int> codeValues = reader.getIntArray( "composite.codeValues" );
+    std::vector<int> codeValues = reader.getIntArray( "composite" + roff::Parser::postFixCodeValues() );
     ASSERT_EQ( 6u, codeValues.size() );
     for ( int i = 0; i < 6; i++ )
     {
@@ -241,29 +247,30 @@ TEST( ReaderTests, testParseGridFiles )
         std::vector<std::pair<std::string, Token::Kind>> arrayTypes = reader.getNamedArrayTypes();
         ASSERT_FALSE( arrayTypes.empty() );
 
-        auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind ) {
-            auto x = std::find_if( values.begin(), values.end(), [&keyword]( const auto& arg ) {
-                return arg.first == keyword;
-            } );
+        auto hasValue = []( auto values, const std::string& keyword, Token::Kind kind )
+        {
+            auto x = std::find_if( values.begin(),
+                                   values.end(),
+                                   [&keyword]( const auto& arg ) { return arg.first == keyword; } );
             return x != values.end() && x->second == kind;
         };
 
-        ASSERT_TRUE( hasValue( arrayTypes, "zvalues.data", Token::Kind::FLOAT ) );
+        ASSERT_TRUE( hasValue( arrayTypes, "zvalues" + roff::Parser::postFixData(), Token::Kind::FLOAT ) );
         ASSERT_TRUE( hasValue( arrayTypes, "zvalues.splitEnz", Token::Kind::BYTE ) );
         ASSERT_TRUE( hasValue( arrayTypes, "PORO", Token::Kind::FLOAT ) );
 
-        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM.codeNames", Token::Kind::CHAR ) );
-        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM.codeValues", Token::Kind::INT ) );
+        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM" + roff::Parser::postFixCodeNames(), Token::Kind::CHAR ) );
+        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM" + roff::Parser::postFixCodeValues(), Token::Kind::INT ) );
 
-        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM.codeNames", Token::Kind::CHAR ) );
-        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM.codeValues", Token::Kind::INT ) );
+        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM" + roff::Parser::postFixCodeNames(), Token::Kind::CHAR ) );
+        ASSERT_TRUE( hasValue( arrayTypes, "EQLNUM" + roff::Parser::postFixCodeValues(), Token::Kind::INT ) );
 
-        std::vector<int> codeValues = reader.getIntArray( "EQLNUM.codeValues" );
+        std::vector<int> codeValues = reader.getIntArray( "EQLNUM" + roff::Parser::postFixCodeValues() );
         ASSERT_EQ( 2u, codeValues.size() );
         ASSERT_EQ( 1, codeValues[0] );
         ASSERT_EQ( 2, codeValues[1] );
 
-        std::vector<std::string> codeNames = reader.getStringArray( "EQLNUM.codeNames" );
+        std::vector<std::string> codeNames = reader.getStringArray( "EQLNUM" + roff::Parser::postFixCodeNames() );
         ASSERT_EQ( 2u, codeNames.size() );
         ASSERT_EQ( "", codeNames[0] );
         ASSERT_EQ( "", codeNames[1] );

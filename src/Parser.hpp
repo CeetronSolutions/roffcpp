@@ -76,5 +76,9 @@ public:
     virtual unsigned char parseByte( const Token& token, std::istream& stream ) const   = 0;
 
     static bool isSimpleType( Token::Kind kind );
+
+    static constexpr std::string postFixData() { return ".data"; }
+    static constexpr std::string postFixCodeNames() { return ".codeNames"; }
+    static constexpr std::string postFixCodeValues() { return ".codeValues"; }
 };
 } // namespace roff
