@@ -158,8 +158,7 @@ std::pair<std::string, RoffScalar> Parser::parseSimpleType( std::vector<Token>::
 
     std::advance( it, 1 );
 
-    auto extractValue = [this]( auto it, Token::Kind kind, std::istream& stream )
-    {
+    auto extractValue = [this]( auto it, Token::Kind kind, std::istream& stream ) {
         if ( kind == Token::Kind::INT ) return RoffScalar( parseInt( *it, stream ) );
         if ( kind == Token::Kind::BOOL ) return RoffScalar( parseBool( *it, stream ) );
         if ( kind == Token::Kind::BYTE ) return RoffScalar( parseByte( *it, stream ) );
