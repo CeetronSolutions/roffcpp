@@ -77,8 +77,8 @@ public:
 
     static bool isSimpleType( Token::Kind kind );
 
-    static constexpr std::string postFixData() { return ".data"; }
-    static constexpr std::string postFixCodeNames() { return ".codeNames"; }
-    static constexpr std::string postFixCodeValues() { return ".codeValues"; }
+    static std::string postFixData() { return ".data"; }
+    static std::string postFixCodeNames() { return ".codeNames"; }
+    static std::string postFixCodeValues() { return ".codeValues"; }
 };
 } // namespace roff
