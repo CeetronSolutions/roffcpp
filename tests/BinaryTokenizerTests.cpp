@@ -281,7 +281,8 @@ TEST( BinaryTokenizerTests, testTokenizeExampleFile )
     BinaryTokenizer    tokenizer;
     std::vector<Token> tokens = tokenizer.tokenizeStream( stream );
 
-    auto readValueForToken = []( std::istream& stream, const Token& token ) {
+    auto readValueForToken = []( std::istream& stream, const Token& token )
+    {
         stream.seekg( token.start() );
         size_t      length = token.end() - token.start();
         std::string res;

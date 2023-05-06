@@ -92,18 +92,18 @@ void Parser::parse( std::istream&                                     stream,
             // Special handling for parameter tags.
             // Take the name of parameter as name of the group to avoid
             // name-clashes (multiple properties named parameter.data/codeNames/codeValues).
-            if ( name == "parameter.data" )
+            if ( name == ( "parameter" + postFixData() ) )
             {
                 name     = lastName;
                 lastName = "";
             }
-            else if ( name == "parameter.codeNames" )
+            else if ( name == ( "parameter" + postFixCodeNames() ) )
             {
-                name = lastName + ".codeNames";
+                name = lastName + postFixCodeNames();
             }
-            else if ( name == "parameter.codeValues" )
+            else if ( name == ( "parameter" + postFixCodeValues() ) )
             {
-                name = lastName + ".codeValues";
+                name = lastName + postFixCodeValues();
             }
 
             // Extract number of array items
@@ -158,7 +158,8 @@ std::pair<std::string, RoffScalar> Parser::parseSimpleType( std::vector<Token>::
 
     std::advance( it, 1 );
 
-    auto extractValue = [this]( auto it, Token::Kind kind, std::istream& stream ) {
+    auto extractValue = [this]( auto it, Token::Kind kind, std::istream& stream )
+    {
         if ( kind == Token::Kind::INT ) return RoffScalar( parseInt( *it, stream ) );
         if ( kind == Token::Kind::BOOL ) return RoffScalar( parseBool( *it, stream ) );
         if ( kind == Token::Kind::BYTE ) return RoffScalar( parseByte( *it, stream ) );
