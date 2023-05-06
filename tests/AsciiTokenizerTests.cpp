@@ -319,7 +319,8 @@ TEST( AsciiTokenizerTests, testTokenizeExampleFile )
     std::vector<Token> tokens = tokenizer.tokenizeStream( stream );
     ASSERT_EQ( 109u, tokens.size() );
 
-    auto readValueForToken = []( std::istream& stream, const Token& token ) {
+    auto readValueForToken = []( std::istream& stream, const Token& token )
+    {
         stream.seekg( token.start() );
         size_t      length = token.end() - token.start();
         std::string res;
