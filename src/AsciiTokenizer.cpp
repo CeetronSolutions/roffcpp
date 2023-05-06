@@ -135,9 +135,8 @@ std::optional<Token> AsciiTokenizer::tokenizeNumber( std::istream& stream )
 {
     tokenizeDelimiter( stream );
 
-    auto isCharValidInDigit = []( char c ) {
-        return std::isdigit( c ) || c == '.' || c == 'e' || c == 'E' || c == '-' || c == '+';
-    };
+    auto isCharValidInDigit = []( char c )
+    { return std::isdigit( c ) || c == '.' || c == 'e' || c == 'E' || c == '-' || c == '+'; };
 
     auto start = stream.tellg();
     auto end   = start;

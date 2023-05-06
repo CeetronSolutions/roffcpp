@@ -194,7 +194,8 @@ std::vector<Token> BinaryTokenizer::tokenizeArrayTagKey( std::istream& stream )
     }
     tokens.push_back( numElementsToken.value() );
 
-    auto parseInt = []( const Token& token, std::istream& stream ) {
+    auto parseInt = []( const Token& token, std::istream& stream )
+    {
         int length = Token::binaryTokenSizeInBytes( Token::Kind::INT );
 
         auto start = token.start();
