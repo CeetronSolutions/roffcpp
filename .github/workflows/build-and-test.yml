@@ -18,13 +18,13 @@ jobs:
             build_type: "Release", cc: "cl", cxx: "cl",
           }
           - {
-            name: "Ubuntu 20.04 GCC Release",
-            os: ubuntu-20.04,
+            name: "Ubuntu 24.04 GCC Release",
+            os: ubuntu-24.04,
             build_type: "Release", cc: "gcc", cxx: "g++"
           }
           - {
-            name: "Ubuntu 20.04 Clang Release",
-            os: ubuntu-20.04,
+            name: "Ubuntu 24.04 Clang Release",
+            os: ubuntu-24.04,
             build_type: "Release", cc: "clang", cxx: "clang++"
           }
           - {
@@ -38,8 +38,8 @@ jobs:
             build_type: "Release", cc: "clang", cxx: "clang++"
           }
           - {
-            name: "macOS 12 Clang Release",
-            os: macos-12,
+            name: "macOS 15 Clang Release",
+            os: macos-15,
             build_type: "Release", cc: "clang", cxx: "clang++"
           }
           - {
@@ -48,13 +48,13 @@ jobs:
             build_type: "Debug", cc: "cl", cxx: "cl",
           }
           - {
-            name: "Ubuntu 20.04 GCC Debug",
-            os: ubuntu-20.04,
+            name: "Ubuntu 24.04 GCC Debug",
+            os: ubuntu-24.04,
             build_type: "Debug", cc: "gcc", cxx: "g++"
           }
           - {
-            name: "Ubuntu 20.04 Clang Debug",
-            os: ubuntu-20.04,
+            name: "Ubuntu 24.04 Clang Debug",
+            os: ubuntu-24.04,
             build_type: "Debug", cc: "clang", cxx: "clang++"
           }
           - {
@@ -68,8 +68,8 @@ jobs:
             build_type: "Debug", cc: "clang", cxx: "clang++"
           }
           - {
-            name: "macOS 12 Clang Debug",
-            os: macos-12,
+            name: "macOS 15 Clang Debug",
+            os: macos-15,
             build_type: "Debug", cc: "clang", cxx: "clang++"
           }
     steps:
