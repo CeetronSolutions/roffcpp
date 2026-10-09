@@ -54,17 +54,25 @@ void Parser::parse( std::istream&                                     stream,
     auto        it           = tokens.begin();
     std::string tagGroupName = "";
     std::string lastName     = "";
+
+    // Step to the next token, failing instead of moving past the end of the token list
+    auto next = [&it, &tokens]()
+    {
+        if ( std::distance( it, tokens.end() ) <= 1 ) throw std::runtime_error( "Unexpected end of file." );
+        std::advance( it, 1 );
+    };
+
     while ( it != tokens.end() )
     {
         if ( it->kind() == Token::Kind::TAG )
         {
-            std::advance( it, 1 );
+            next();
             assert( it->kind() == Token::Kind::NAME );
             tagGroupName = parseString( *it, stream );
         }
         else if ( isSimpleType( it->kind() ) )
         {
-            auto simpleType = parseSimpleType( it, tagGroupName, stream );
+            auto simpleType = parseSimpleType( it, tokens.end(), tagGroupName, stream );
             if ( simpleType.first == "parameter.name" )
             {
                 lastName = std::get<std::string>( simpleType.second );
@@ -81,12 +89,12 @@ void Parser::parse( std::istream&                                     stream,
         else if ( it->kind() == Token::Kind::ARRAY )
         {
             // Extract the type
-            std::advance( it, 1 );
+            next();
             Token typeToken = *it;
             assert( isSimpleType( typeToken.kind() ) );
 
             // Extract the name
-            std::advance( it, 1 );
+            next();
             std::string name = tagGroupName + "." + parseString( *it, stream );
 
             // Special handling for parameter tags.
@@ -107,18 +115,38 @@ void Parser::parse( std::istream&                                     stream,
             }
 
             // Extract number of array items
-            std::advance( it, 1 );
+            next();
             long arrayLength = parseInt( *it, stream );
+            if ( arrayLength < 0 ) throw std::runtime_error( "Invalid array length." );
 
-            // Move to the first item to get the index
-            std::advance( it, 1 );
-            long startIndex = static_cast<long>( std::distance( tokens.begin(), it ) );
+            // The index of the first item
+            long startIndex = static_cast<long>( std::distance( tokens.begin(), it ) ) + 1;
 
-            if ( it->kind() != Token::Kind::ARRAYBLOB )
+            // The array length is read from the file and must be backed by actual tokens
+            const long tokensAfterLength = static_cast<long>( std::distance( it, tokens.end() ) ) - 1;
+            const bool isBlob            = tokensAfterLength > 0 && ( it + 1 )->kind() == Token::Kind::ARRAYBLOB;
+
+            if ( isBlob )
             {
-                // Skip rest of the array when not blob.
-                // The blob is always only one token and is skip already.
-                std::advance( it, arrayLength - 1 );
+                // The blob is always only one token
+                std::advance( it, 1 );
+
+                // The data of the blob must be present in the file
+                stream.clear();
+                const auto currentPos = stream.tellg();
+                stream.seekg( 0, std::ios::end );
+                const auto streamSize = stream.tellg();
+                stream.seekg( currentPos );
+                if ( it->end() > static_cast<size_t>( streamSize ) )
+                    throw std::runtime_error( "Array data is incomplete." );
+            }
+            else
+            {
+                if ( arrayLength > tokensAfterLength )
+                    throw std::runtime_error( "Array length exceeds the number of items in the file." );
+
+                // Skip rest of the array
+                std::advance( it, arrayLength );
             }
 
             arrayInfo[name] = std::make_pair( startIndex, arrayLength );
@@ -146,11 +174,14 @@ bool Parser::isSimpleType( Token::Kind kind )
 ///
 //--------------------------------------------------------------------------------------------------
 std::pair<std::string, RoffScalar> Parser::parseSimpleType( std::vector<Token>::const_iterator& it,
+                                                            std::vector<Token>::const_iterator  end,
                                                             const std::string&                  tagGroupName,
                                                             std::istream&                       stream ) const
 {
     assert( isSimpleType( it->kind() ) );
     Token::Kind kind = it->kind();
+
+    if ( std::distance( it, end ) <= 2 ) throw std::runtime_error( "Unexpected end of file." );
 
     std::advance( it, 1 );
     assert( it->kind() == Token::Kind::NAME );

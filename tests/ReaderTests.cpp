@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <variant>
 
@@ -309,4 +310,73 @@ TEST( ReaderTests, testReadWrongFileType )
         errMsg = ex.what();
     }
     ASSERT_EQ( errMsg, std::string( "Unexpected file type." ) );
+}
+
+//--------------------------------------------------------------------------------------------------
+/// The declared array length is larger than the number of items in the file. Used to read outside
+/// the token list.
+//--------------------------------------------------------------------------------------------------
+TEST( ReaderTests, testParseArrayLengthLargerThanContent )
+{
+    auto makeFile = []( const std::string& codeNamesLength )
+    {
+        return "roff-asc\n"
+               "#ROFF file#\n"
+               "tag filedata\n"
+               "int byteswaptest 1\n"
+               "endtag\n"
+               "tag parameter\n"
+               "char name  \"composite\"\n"
+               "array char codeNames " +
+               codeNamesLength +
+               "\n"
+               " \"code name 1\"\n"
+               " \"code name 2\"\n"
+               "array int codeValues 2\n"
+               " 0 1\n"
+               "endtag\n"
+               "tag eof\n"
+               "endtag\n";
+    };
+
+    {
+        std::istringstream stream( makeFile( "2" ) );
+        Reader             reader( stream );
+        reader.parse();
+        EXPECT_EQ( 2u, reader.getArrayLength( "composite.codeNames" ) );
+    }
+
+    for ( const std::string& length : { "100000", "-1" } )
+    {
+        std::istringstream stream( makeFile( length ) );
+        Reader             reader( stream );
+        EXPECT_THROW( reader.parse(), std::runtime_error ) << "Array length " << length;
+    }
+}
+
+//--------------------------------------------------------------------------------------------------
+/// Files ending in the middle of a declaration used to read outside the token list.
+//--------------------------------------------------------------------------------------------------
+TEST( ReaderTests, testParseTruncatedFile )
+{
+    for ( const std::string& content : { std::string( "roff-asc\n#ROFF file#\ntag" ),
+                                         std::string( "roff-asc\n#ROFF file#\ntag filedata\nint" ),
+                                         std::string( "roff-asc\n#ROFF file#\ntag filedata\nint byteswaptest" ),
+                                         std::string( "roff-asc\n#ROFF file#\ntag a\narray" ),
+                                         std::string( "roff-asc\n#ROFF file#\ntag a\narray int" ),
+                                         std::string( "roff-asc\n#ROFF file#\ntag a\narray int values" ),
+                                         std::string( "roff-asc\n#ROFF file#\ntag a\narray int values 3" ),
+                                         std::string( "roff-asc\n#ROFF file#\ntag a\narray int values 3\n 1 2" ) } )
+    {
+        std::istringstream stream( content );
+        Reader             reader( stream );
+        try
+        {
+            reader.parse();
+        }
+        catch ( std::runtime_error& )
+        {
+            // Rejecting the file is fine, reading outside the tokens is not
+        }
+    }
 }

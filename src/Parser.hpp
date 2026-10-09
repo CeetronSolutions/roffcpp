@@ -42,6 +42,7 @@ public:
                 std::map<std::string, std::pair<long, long>>&     arrayInfo ) const;
 
     std::pair<std::string, RoffScalar> parseSimpleType( std::vector<Token>::const_iterator& it,
+                                                        std::vector<Token>::const_iterator  end,
                                                         const std::string&                  tagGroupName,
                                                         std::istream&                       stream ) const;
 

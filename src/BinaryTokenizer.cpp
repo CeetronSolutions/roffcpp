@@ -211,6 +211,8 @@ std::vector<Token> BinaryTokenizer::tokenizeArrayTagKey( std::istream& stream )
     int  numElements = parseInt( numElementsToken.value(), stream );
     stream.seekg( streamPos );
 
+    if ( numElements < 0 ) throw std::runtime_error( "Invalid array length." );
+
     std::vector<Token> arrayTokens = tokenizeArrayData( stream, numElements, typeToken.kind() );
     tokens.insert( tokens.end(), arrayTokens.begin(), arrayTokens.end() );
     return tokens;
