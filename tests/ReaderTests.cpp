@@ -346,7 +346,7 @@ TEST( ReaderTests, testParseArrayLengthLargerThanContent )
         EXPECT_EQ( 2u, reader.getArrayLength( "composite.codeNames" ) );
     }
 
-    for ( const std::string& length : { "100000", "-1" } )
+    for ( const std::string length : { "100000", "-1" } )
     {
         std::istringstream stream( makeFile( length ) );
         Reader             reader( stream );
