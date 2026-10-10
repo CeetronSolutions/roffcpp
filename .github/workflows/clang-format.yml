@@ -11,12 +11,12 @@ jobs:
           sudo apt-get update
           sudo apt install clang-format-15
           clang-format --version
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
       - name: Check format
         run: |
           find -name *.h -o -name *.cpp -o -name *.inl | xargs clang-format -i
           git diff
-      - uses: peter-evans/create-pull-request@v4
+      - uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Fixes by clang-format"
